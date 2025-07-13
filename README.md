@@ -5,4 +5,8 @@ This driver is based on the `GxEPD2_750c_Z08` implementation, but uses a differe
 
 Tested with the Waveshare e-paper driver HAT v2.3.
 
-## Examples
+<img src="https://github.com/user-attachments/assets/68b59079-bffe-47d7-860c-bf79f4d2ba6b" width="600"/>
+</br>
+<img src="https://github.com/user-attachments/assets/265ab462-d1cc-43eb-9c40-81a1a8f13555" width="600"/>
+</br>
+<img src="https://github.com/user-attachments/assets/e05a1bfd-93d4-459b-97c9-a80a9e0cbf0f" width="600"/>
