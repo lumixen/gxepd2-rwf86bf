@@ -9,8 +9,8 @@ class GxEPD2_750c_86BF : public GxEPD2_EPD
     static const uint16_t HEIGHT = 480;
     static const GxEPD2::Panel panel = GxEPD2::GDEW075Z08;
     static const bool hasColor = true;
-    static const bool hasPartialUpdate = true;
-    static const bool usePartialUpdate = true; // set false to get better image (flashes full screen)
+    static const bool hasPartialUpdate = false;
+    static const bool usePartialUpdate = false; // set false to get better image (flashes full screen)
     static const bool hasFastPartialUpdate = false;
     static const uint16_t power_on_time = 150; // ms, e.g. 133421us
     static const uint16_t power_off_time = 30; // ms, e.g. 25362us

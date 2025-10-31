@@ -3,22 +3,33 @@ import sys
 import os
 import numpy as np
 
+
 def img_to_brw_arrays(img_path, out_txt_path):
     WIDTH, HEIGHT = 800, 480
     BW_SIZE = (WIDTH * HEIGHT) // 8
 
-    img = Image.open(img_path).convert('RGB')
-    assert img.size == (WIDTH, HEIGHT), f"Image must be {WIDTH}x{HEIGHT}, got {img.size}"
+    img = Image.open(img_path).convert("RGB")
+
+    # Resize image if needed
+    if img.size != (WIDTH, HEIGHT):
+        print(f"Resizing image from {img.size} to {(WIDTH, HEIGHT)}")
+        img = img.resize((WIDTH, HEIGHT), Image.LANCZOS)
+
+    assert img.size == (WIDTH, HEIGHT), (
+        f"Image must be {WIDTH}x{HEIGHT}, got {img.size}"
+    )
 
     # Convert to numpy array for palette mapping
     img_array = np.array(img)
 
     # Define 3 target colors (RGB)
-    palette = np.array([
-        [0, 0, 0],        # Black
-        [255, 255, 255],  # White
-        [255, 0, 0]       # Red
-    ])
+    palette = np.array(
+        [
+            [0, 0, 0],  # Black
+            [255, 255, 255],  # White
+            [255, 0, 0],  # Red
+        ]
+    )
 
     # Map each pixel to closest color in palette
     def closest_color(pixel):
@@ -34,7 +45,7 @@ def img_to_brw_arrays(img_path, out_txt_path):
     brw_img_path = f"{base}_brw{ext}"
     brw_img.save(brw_img_path)
 
-    bw_bytes = bytearray([0x00] * BW_SIZE)   # Default all bits to 0 (black)
+    bw_bytes = bytearray([0x00] * BW_SIZE)  # Default all bits to 0 (black)
     red_bytes = bytearray([0x00] * BW_SIZE)  # Default all bits to 0 (no red)
 
     for y in range(HEIGHT):
@@ -48,10 +59,10 @@ def img_to_brw_arrays(img_path, out_txt_path):
             # Red pixel: BW=0, RED=1
             if r == 255 and g == 0 and b == 0:
                 bw_bytes[byte_idx] &= ~(1 << bit_idx)
-                red_bytes[byte_idx] |= (1 << bit_idx)
+                red_bytes[byte_idx] |= 1 << bit_idx
             # Black pixel: BW=1, RED=0
             elif r == 0 and g == 0 and b == 0:
-                bw_bytes[byte_idx] |= (1 << bit_idx)
+                bw_bytes[byte_idx] |= 1 << bit_idx
                 red_bytes[byte_idx] &= ~(1 << bit_idx)
             # White pixel: BW=0, RED=0
             else:
@@ -66,14 +77,15 @@ def img_to_brw_arrays(img_path, out_txt_path):
             for x in range(0, WIDTH, 8):
                 idx = y * WIDTH + x
                 byte_idx = idx // 8
-                row.append(f'0x{arr[byte_idx]:02X}')
-            lines.append("    " + ', '.join(row) + ",")
+                row.append(f"0x{arr[byte_idx]:02X}")
+            lines.append("    " + ", ".join(row) + ",")
         lines.append("};\n")
-        return '\n'.join(lines)
+        return "\n".join(lines)
 
-    with open(out_txt_path, 'w') as f:
+    with open(out_txt_path, "w") as f:
         f.write(array_to_cpp(bw_bytes, "IMAGE_BW"))
         f.write(array_to_cpp(red_bytes, "IMAGE_RED"))
+
 
 if __name__ == "__main__":
     if len(sys.argv) != 3:

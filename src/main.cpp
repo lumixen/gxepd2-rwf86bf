@@ -52,6 +52,30 @@ void drawBicycle()
   delay(2000);
 }
 
+void drawPersona()
+{
+  display.firstPage();
+  do
+  {
+    display.fillScreen(GxEPD_WHITE);
+    display.drawBitmap(0, 0, IMAGE_BW_PERSONA, display.epd2.WIDTH, display.epd2.HEIGHT, GxEPD_BLACK);
+    display.drawBitmap(0, 0, IMAGE_RED_PERSONA, display.epd2.WIDTH, display.epd2.HEIGHT, GxEPD_RED);
+  } while (display.nextPage());
+  delay(2000);
+}
+
+void drawSamurai()
+{
+  display.firstPage();
+  do
+  {
+    display.fillScreen(GxEPD_WHITE);
+    display.drawBitmap(0, 0, IMAGE_BW_SAMURAI, display.epd2.WIDTH, display.epd2.HEIGHT, GxEPD_BLACK);
+    display.drawBitmap(0, 0, IMAGE_RED_SAMURAI, display.epd2.WIDTH, display.epd2.HEIGHT, GxEPD_RED);
+  } while (display.nextPage());
+  delay(2000);
+}
+
 void fillWhite()
 {
   display.firstPage();
@@ -63,15 +87,22 @@ void fillWhite()
 
 void setup()
 {
-  pinMode(33, OUTPUT);
-  digitalWrite(33, HIGH); // enable power to the panel
+  // Print debug info
+  Serial.begin(115200);
+  Serial.println("GxEPD2_3C 86BF example");
+  // Initialize display
+  pinMode(2, OUTPUT);
+  digitalWrite(2, HIGH); // enable power to the panel
   display.init(115200, true, 2, false);
-  helloWorld();
+  display.setRotation(2);
+  // helloWorld();
   // delay(60000);
   // drawParis();
   // delay(60000);
   // drawBicycle();
-  fillWhite();
+  // drawPersona();
+  drawSamurai();
+  // fillWhite();
   display.hibernate();
 }
 
